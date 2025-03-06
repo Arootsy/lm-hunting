@@ -16,3 +16,15 @@ function CreateBlip(blipData)
     
     return { blip = blip, radiusBlip = radiusBlip }
 end
+
+function onEnter(index)
+    
+end
+
+function inside(index)
+
+end
+
+function onExit(index)
+    
+end

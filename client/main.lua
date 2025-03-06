@@ -17,9 +17,15 @@ CreateThread(function()
             coords = zone.coords,
             radius = zone.radius,
             debug = Config.Debug,
-            inside = inside,
-            onEnter = onEnter,
-            onExit = onExit
+            inside = function ()
+                inside(i)
+            end,
+            onEnter = function ()
+                onEnter(i)
+            end,
+            onExit = function ()
+                onExit(i)
+            end
         })
 
         if zone.blip then
@@ -29,6 +35,9 @@ CreateThread(function()
             zone.blip.sprite = zone.blip.sprite or 141
             zone.blip.name = zone.blip.name or 'Hunting Zone'
         end
+
+        if not Hunting.Blips then Hunting.Blips = {} end
+        if not Hunting.Zones then Hunting.Zones = {} end
 
         Hunting.Blips[#Hunting.Blips+1] = CreateBlip(zone.blip)
 
