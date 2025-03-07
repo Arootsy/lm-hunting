@@ -1,32 +1,12 @@
 local Config = require 'data.config';
-require 'client.utils.functions';
+Hunting = {};
+
 require 'client.modules.zones.client';
-
-
-local center = vector3(-745.4625, 4864.6240, 226.8306)
-local radius = 50.0
-
-local randomCoord = GetRandomPointInCircle(center, radius)
-local Hunting = {};
+require 'client.modules.target.client';
 
 CreateThread(function()
     for i = 1, #Config.Zones do
         local zone = Config.Zones[i]
-        
-        local sphere = lib.zones.sphere({
-            coords = zone.coords,
-            radius = zone.radius,
-            debug = Config.Debug,
-            inside = function ()
-                inside(i)
-            end,
-            onEnter = function ()
-                onEnter(i)
-            end,
-            onExit = function ()
-                onExit(i)
-            end
-        })
 
         if zone.blip then
             zone.blip.coords = zone.coords
@@ -40,7 +20,18 @@ CreateThread(function()
         if not Hunting.Zones then Hunting.Zones = {} end
 
         Hunting.Blips[#Hunting.Blips+1] = CreateBlip(zone.blip)
-
-        Hunting.Zones[#Hunting.Zones+1] = sphere
+        Hunting.Zones[#Hunting.Zones+1] = CreateSphereZone(zone)
     end
+end)
+
+RegisterNetEvent('lm-hunting:client:createdAnimal', CreateTargetOnEntity)
+
+lib.callback.register('lm-hunting:cb:getGroundZ', function (x, y)
+    local found, z = GetGroundZFor_3dCoord(x, y, 500.0, 0.0, false)
+
+    return found and z or nil;
+end)
+
+RegisterCommand('hi', function ()
+    TriggerServerEvent('lm-hunting:server:createAnimal', 1, 'a_c_deer') 
 end)
