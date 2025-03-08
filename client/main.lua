@@ -1,6 +1,7 @@
 local Config = require 'data.config';
 Hunting = {};
 
+require 'client.utils.functions';
 require 'client.modules.zones.client';
 require 'client.modules.target.client';
 
@@ -20,9 +21,22 @@ CreateThread(function()
         if not Hunting.Zones then Hunting.Zones = {} end
 
         Hunting.Blips[#Hunting.Blips+1] = CreateBlip(zone.blip)
-        Hunting.Zones[#Hunting.Zones+1] = CreateSphereZone(zone)
+        Hunting.Zones[#Hunting.Zones+1] = CreateSphereZone(zone, i)
     end
 end)
+
+function HuntingThread()
+    CreateThread(function()
+        while true do
+            if GetCurrentPedWeapon(cache.ped, false) ~= Config.General.huntingRifle then return end;
+
+            
+            
+            
+            Wait(7)
+        end
+    end)
+end
 
 RegisterNetEvent('lm-hunting:client:createdAnimal', CreateTargetOnEntity)
 

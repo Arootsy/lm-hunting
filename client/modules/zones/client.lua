@@ -20,7 +20,7 @@ function CreateBlip(blipData)
 end
 
 function onEnter(index)
-    
+    TriggerServerEvent('lm-hunting:server:addPlayer', cache.serverId, index)
 end
 
 function inside(index)
@@ -28,17 +28,15 @@ function inside(index)
 end
 
 function onExit(index)
-    
+    TriggerServerEvent('lm-hunting:server:removePlayer', cache.serverId, index)
 end
 
-function CreateSphereZone(zone)
+function CreateSphereZone(zone, i)
     local sphere = lib.zones.sphere({
         coords = zone.coords,
         radius = zone.radius,
         debug = Config.Debug,
-        inside = function ()
-            inside(i)
-        end,
+        inside = HuntingThread(),
         onEnter = function ()
             onEnter(i)
         end,

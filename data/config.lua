@@ -1,9 +1,15 @@
 return {
     Debug = true, -- Enable or disable debug mode
 
+    Interval = 60000, -- Interval in milliseconds to spawn animals
+
+    AnimalPerPlayer = 2, -- Amount of animals to spawn per player per interval
+
     General = {
         license = true, -- Enable or disable hunting license
         maxAnimals = 10, -- Maximum amount of animals in the zone PER PLAYER!!
+        buyItems = true, -- Enable or disable buying items
+        huntingRifle = `WEAPON_LEE` -- Weapon hash leave `` instead of '' for hunting rifle
     },
 
     Shop = {
@@ -36,5 +42,9 @@ return {
             radius = 500.0, -- Radius of the zone
             blip = { sprite = 141, color = 1, name = 'Hunting Zone' }, -- outcomment blip to disable it
         }
+    },
+
+    Skin = {
+        progressDuration = 10000, -- Duration of the skinning process in milliseconds
     }
 }

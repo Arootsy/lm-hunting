@@ -1,25 +1,28 @@
 local Config = require 'data.config';
 
-function CreateAnimal(index, model)
-    local coords = GetRandomPointInCircle(Config.Zones[index].coords, Config.Zones[index].radius);
-    local ped = CreatePed(4, model, coords.x, coords.y, coords.z, 0.0, true, true);
+function CreateAnimal(source, index, model)
+    print(source, index, model, "DIT IS CREATE ANIMAL")
+    local coords = GetRandomPointInCircle(source, Config.Zones[index].coords, Config.Zones[index].radius);
 
-    lib.print.info(('Created model: %s on coords: %s'):format(model, json.encode(coords)));
+    CreateThread(function()
+        if type(model) == "string" then
+            model = joaat(model)
+        end
+        print(model)
+        local ped = CreatePed(28, model, coords.x, coords.y, coords.z, math.random(0.0, 360.0), true, true)
+        while not DoesEntityExist(ped) do
+            Wait(50)
+        end
 
-    local success = lib.waitFor(function () return DoesEntityExist(ped) end)
-    if not success then return lib.print.error(('Failed to create model: %s'):format(model)) end
+        local netId = NetworkGetNetworkIdFromEntity(ped)
+        print(ped, netId)
+        lib.print.info(('Created model: %s on coords: %s'):format(model, json.encode(coords)));
 
-    local netId = NetworkGetNetworkIdFromEntity(ped)
-    
-    if not Hunting.Animals then Hunting.Animals = {} end
-
-    Hunting.Animals[netId] = {
-        model = model,
-    };
-
-    print(netId)
-
-    TriggerClientEvent('lm-hunting:client:createdAnimal', -1, netId);
+        if not Hunting.Animals then Hunting.Animals = {} end
+        Hunting.Animals[netId] = { model = model };
+        
+        TriggerClientEvent('lm-hunting:client:createdAnimal', -1, netId);
+    end)
 end;
 
 function DeleteAnimal(id)
